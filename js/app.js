@@ -203,10 +203,6 @@ els.searchForm.addEventListener('submit', e => {
   e.preventDefault(); const q = els.searchInput.value.trim();
   if (q) location.hash = 'results/' + encodeURIComponent(q);
 });
-document.getElementById('btn-search-moldrek').addEventListener('click', () => {
-  // Navigazione nella stessa scheda: evita il blocco dei popup nei browser/PWA.
-  window.location.href = 'https://www.moldrek.com/indice_ricette_a.htm';
-});
 els.btnHome.addEventListener('click', () => { location.hash = ''; });
 document.getElementById('btn-cancel-add').addEventListener('click', () => { location.hash = ''; });
 els.btnReject.addEventListener('click', () => { location.hash = ''; });
