@@ -204,7 +204,7 @@ async function renderSavedView() {
     items.push({ ...r, _src: blob ? newBlobUrl(blob) : r.photoUrl });
   }
   renderRecipeList(els.savedGrid, items, r => {
-    location.hash = `recipe/${r.id}`;
+    location.hash = `recipe/${encodeURIComponent(r.id)}`;
   });
 }
 
