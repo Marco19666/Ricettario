@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#e85d04">
-  <meta name="description" content="Cerca, salva e consulta le tue ricette offline">
+  <meta name="description" content="Cerca, crea e conserva le tue ricette">
   <title>Ricettario</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
@@ -16,53 +16,64 @@
     <h1 id="app-title">Ricettario</h1>
     <a href="#saved" class="icon-btn" aria-label="Ricette salvate">♥</a>
   </header>
-
   <main>
     <section id="view-search" class="view">
+      <div class="home-actions">
+        <a class="home-action" href="#saved">♥ <span>Le mie ricette</span></a>
+        <a class="home-action primary-action" href="#add">＋ <span>Aggiungi ricetta</span></a>
+      </div>
       <form id="search-form" class="search-bar" autocomplete="off">
         <input type="search" id="search-input" placeholder="Cerca una ricetta (es. carbonara)" required>
         <button type="submit">Cerca</button>
       </form>
-      <p class="hint">Cerca il nome di una ricetta: consulterò automaticamente l’indice Moldrek e ti mostrerò le corrispondenze.</p>
-
+      <p class="hint">Cerca una ricetta oppure lasciati ispirare dal piatto del giorno.</p>
+      <section class="daily-section" aria-labelledby="daily-title">
+        <p class="section-kicker">ISPIRAZIONE QUOTIDIANA</p>
+        <h2 id="daily-title">La ricetta del giorno</h2>
+        <button id="daily-card" class="daily-card" type="button">
+          <img id="daily-photo" alt="" loading="lazy">
+          <span class="daily-copy"><strong id="daily-name"></strong><span>Ingredienti e preparazione →</span></span>
+        </button>
+      </section>
     </section>
-
-    <section id="view-results" class="view" hidden>
-      <div id="results-grid" class="grid"></div>
-    </section>
-
+    <section id="view-results" class="view" hidden><div id="results-grid" class="grid"></div></section>
     <section id="view-detail" class="view" hidden>
       <div class="tiles">
         <article class="tile tile-title">
-          <h2 id="r-title"></h2>
-          <p id="r-meta" class="meta"></p>
+          <h2 id="r-title"></h2><p id="r-meta" class="meta"></p>
           <p id="r-source" class="source-link" hidden><a id="r-source-link" href="#" target="_blank" rel="noopener noreferrer">Apri la ricetta originale ↗</a></p>
         </article>
         <article class="tile tile-photo">
-          <img id="r-photo" alt="" hidden>
-          <p id="r-photo-placeholder" class="photo-placeholder">Foto non disponibile</p>
+          <img id="r-photo" alt="" hidden><p id="r-photo-placeholder" class="photo-placeholder">Foto non disponibile</p>
           <p id="r-photo-credit" class="meta" hidden></p>
         </article>
-        <article class="tile tile-ingredients">
-          <h3 id="r-ingredients-title">Ingredienti</h3>
-          <ul id="r-ingredients"></ul>
-        </article>
-        <article class="tile tile-preparation">
-          <h3 id="r-preparation-title">Preparazione</h3>
-          <div id="r-instructions"></div>
-        </article>
+        <article class="tile tile-ingredients"><h3 id="r-ingredients-title">Ingredienti</h3><ul id="r-ingredients"></ul></article>
+        <article class="tile tile-preparation"><h3 id="r-preparation-title">Preparazione</h3><div id="r-instructions"></div></article>
       </div>
       <div class="actions">
-        <button id="btn-accept" type="button" class="primary">Accetta e salva</button>
-        <button id="btn-reject" type="button">Scarta</button>
+        <button id="btn-reject" type="button">← Torna alla ricerca</button>
+        <button id="btn-accept" type="button" class="primary">Salva nelle mie ricette</button>
       </div>
     </section>
-
     <section id="view-saved" class="view" hidden>
+      <div class="view-heading"><p class="section-kicker">IL TUO RICETTARIO PERSONALE</p><h2>Le mie ricette</h2><p class="meta">Le ricette salvate su questo dispositivo.</p></div>
       <div id="saved-grid" class="grid"></div>
     </section>
+    <section id="view-add" class="view" hidden>
+      <button id="btn-cancel-add" class="back-link" type="button">← Torna alla ricerca</button>
+      <div class="view-heading"><p class="section-kicker">IL TUO RICETTARIO PERSONALE</p><h2>Aggiungi una ricetta</h2><p class="meta">Inserisci il piatto, una foto, gli ingredienti e i passaggi.</p></div>
+      <form id="recipe-form" class="recipe-form">
+        <label>Nome della ricetta<input id="recipe-title" name="title" required maxlength="120" placeholder="Es. La torta della nonna"></label>
+        <label>Fotografia del piatto
+          <span class="photo-upload"><img id="recipe-preview" alt="Anteprima foto" hidden><span id="photo-prompt">＋ Scegli una foto o scatta con la fotocamera</span><input id="recipe-photo" type="file" accept="image/*" capture="environment"></span>
+        </label>
+        <label>Ingredienti<textarea id="recipe-ingredients" name="ingredients" rows="6" required placeholder="Un ingrediente per riga"></textarea></label>
+        <label>Preparazione<textarea id="recipe-preparation" name="preparation" rows="8" required placeholder="Descrivi i passaggi della ricetta"></textarea></label>
+        <button class="form-submit" type="submit">Salva ricetta</button>
+        <p id="form-status" class="form-status" role="status"></p>
+      </form>
+    </section>
   </main>
-
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
