@@ -1,4 +1,4 @@
-const CACHE = 'ricettario-v14';
+const CACHE = 'ricettario-v15';
 const ASSETS = ['./','./index.html','./style.css','./manifest.webmanifest','./js/app.js','./js/api.js','./js/local-recipes.js','./js/db.js','./js/ui.js','./icons/icon.svg'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))); self.skipWaiting(); });
 self.addEventListener('activate', e => {
