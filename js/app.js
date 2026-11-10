@@ -211,7 +211,7 @@ els.linkForm.addEventListener('submit', async event => {
     return;
   }
 
-  if (url.protocol !== 'https:' || !/(^|\\.)moldrek\\.com$/i.test(url.hostname)) {
+  if (url.protocol !== 'https:' || !/(^|\.)moldrek\.com$/i.test(url.hostname)) {
     els.linkStatus.textContent = 'Inserisci un collegamento https://www.moldrek.com/ valido.';
     return;
   }
