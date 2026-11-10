@@ -1,26 +1,47 @@
 const BASE = 'https://www.themealdb.com/api/json/v1/1';
 
+async function apiGet(path) {
+  const res = await fetch(`${BASE}/${path}`);
+  if (!res.ok) throw new Error('Servizio ricette non disponibile (HTTP ' + res.status + ')');
+  return res.json();
+}
+
 export async function searchMeals(query) {
-  const res = await fetch(`${BASE}/search.php?s=${encodeURIComponent(query)}`);
-  if (!res.ok) throw new Error('Ricerca non disponibile');
-  const data = await res.json();
-  return (data.meals || []).map(normalizeList);
+  const q = String(query || '').trim();
+  if (!q) return [];
+
+  // Prima cerca il termine richiesto; in parallelo recupera il catalogo italiano
+  // per dare precedenza alle ricette della cucina italiana.
+  const [searched, italian] = await Promise.all([
+    apiGet(`search.php?s=${encodeURIComponent(q)}`),
+    apiGet('filter.php?a=Italian').catch(() => ({ meals: [] }))
+  ]);
+
+  const italianIds = new Set((italian.meals || []).map(m => String(m.idMeal)));
+  const allMatches = (searched.meals || []).map(normalizeList);
+  const italianMatches = allMatches.filter(m =>
+    italianIds.has(String(m.id)) || String(m.area || '').toLowerCase() === 'italian'
+  );
+  const otherMatches = allMatches.filter(m => !italianMatches.includes(m));
+
+  // Se la ricerca testuale non trova risultati italiani, non lasciare l'utente
+  // senza risultati: mostra gli altri risultati chiaramente classificati.
+  return [...italianMatches, ...otherMatches];
 }
 
 export async function getMealById(id) {
-  const res = await fetch(`${BASE}/lookup.php?i=${encodeURIComponent(id)}`);
-  if (!res.ok) throw new Error('Dettaglio non disponibile');
-  const data = await res.json();
-  return data.meals ? normalizeFull(data.meals[0]) : null;
+  const data = await apiGet(`lookup.php?i=${encodeURIComponent(id)}`);
+  const meal = data.meals && data.meals[0];
+  return meal ? normalizeFull(meal) : null;
 }
 
 function normalizeList(m) {
   return {
-    id: m.idMeal,
-    title: m.strMeal,
-    category: m.strCategory,
-    area: m.strArea,
-    photoUrl: m.strMealThumb,
+    id: String(m.idMeal || ''),
+    title: m.strMeal || 'Ricetta senza titolo',
+    category: m.strCategory || '',
+    area: m.strArea || '',
+    photoUrl: m.strMealThumb || '',
   };
 }
 
@@ -36,12 +57,8 @@ function normalizeFull(m) {
     }
   }
   return {
-    id: m.idMeal,
-    title: m.strMeal,
-    category: m.strCategory,
-    area: m.strArea,
+    ...normalizeList(m),
     instructions: m.strInstructions || '',
-    photoUrl: m.strMealThumb,
     ingredients,
   };
 }
