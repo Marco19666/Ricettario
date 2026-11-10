@@ -194,7 +194,7 @@ els.recipeForm.addEventListener('submit', async event => {
   } catch (err) {
     els.formStatus.textContent = 'Non sono riuscito a salvare: ' + err.message;
   } finally { submit.disabled = false; submit.textContent = 'Salva ricetta'; }
-}
+});
 
 els.dailyCard.addEventListener('click', () => {
   if (state.dailyRecipe) location.hash = 'recipe/' + encodeURIComponent(state.dailyRecipe.id);
