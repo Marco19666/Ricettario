@@ -16,8 +16,12 @@ export function renderRecipeList(container, recipes, onSelect) {
     img.loading = 'lazy';
     img.alt = r.title || 'Ricetta';
     const imageUrl = r._src || r.photoUrl;
-    if (imageUrl) { img.src = imageUrl; img.addEventListener('error', () => { imgWrap.hidden = true; }); }
-    else imgWrap.hidden = true;
+    if (imageUrl) {
+      img.src = imageUrl;
+      img.addEventListener('error', () => { imgWrap.hidden = true; });
+    } else {
+      imgWrap.hidden = true;
+    }
     imgWrap.appendChild(img);
 
     const body = document.createElement('div');
@@ -53,45 +57,62 @@ export function renderDetail(recipe, photoSrc) {
 
   const img = document.getElementById('r-photo');
   const photoTile = img.closest('.tile-photo');
+  const photoPlaceholder = document.getElementById('r-photo-placeholder');
+  photoTile.hidden = false;
   if (photoSrc) {
     img.src = photoSrc;
     img.alt = recipe.title;
     img.hidden = false;
-    photoTile.hidden = false;
-    img.onerror = () => { photoTile.hidden = true; };
+    photoPlaceholder.hidden = true;
+    img.onerror = () => {
+      img.hidden = true;
+      photoPlaceholder.hidden = false;
+      photoPlaceholder.textContent = 'Foto non disponibile';
+    };
   } else {
-    photoTile.hidden = true;
     img.removeAttribute('src');
     img.alt = '';
     img.hidden = true;
+    photoPlaceholder.hidden = false;
+    photoPlaceholder.textContent = 'Foto non aggiunta';
   }
 
   const ingredients = recipe.ingredients || [];
-  const ingredientsTile = document.querySelector('.tile-ingredients');
-  const ingredientsTitle = document.getElementById('r-ingredients-title');
-  ingredientsTile.hidden = false;
-  ingredientsTitle.textContent = 'Ingredienti';
-
   const ul = document.getElementById('r-ingredients');
   ul.innerHTML = '';
-  for (const { name, measure } of ingredients) {
+  if (ingredients.length) {
+    for (const item of ingredients) {
+      const li = document.createElement('li');
+      li.textContent = [item.measure, item.name].filter(Boolean).join(' ').trim();
+      ul.appendChild(li);
+    }
+  } else {
     const li = document.createElement('li');
-    li.textContent = `${measure} ${name}`.trim();
+    li.textContent = 'Ingredienti non inseriti: consulta la ricetta originale.';
     ul.appendChild(li);
   }
 
-  const prepTitle = document.getElementById('r-preparation-title');
-  prepTitle.textContent = recipe.sourceUrl ? 'Note personali' : 'Preparazione';
+  document.getElementById('r-preparation-title').textContent = 'Preparazione';
   const prep = document.getElementById('r-instructions');
   prep.innerHTML = '';
-  for (const p of (recipe.instructions || '').split(/\r?\n+/).filter(Boolean)) {
+  const steps = (recipe.instructions || '').split(/\r?\n+/).filter(Boolean);
+  if (steps.length) {
+    for (const step of steps) {
+      const para = document.createElement('p');
+      para.textContent = step;
+      prep.appendChild(para);
+    }
+  } else {
     const para = document.createElement('p');
-    para.textContent = p;
+    para.textContent = 'Preparazione non inserita: consulta la ricetta originale.';
     prep.appendChild(para);
   }
-  if (recipe.sourceUrl && !recipe.instructions) {
-    const para = document.createElement('p');
-    para.textContent = 'Nessuna nota aggiunta. Apri il collegamento originale per consultare ingredienti e preparazione.';
-    prep.appendChild(para);
+
+  if (recipe.personalNotes) {
+    const notesTitle = document.createElement('h4');
+    notesTitle.textContent = 'Le mie note';
+    const notes = document.createElement('p');
+    notes.textContent = recipe.personalNotes;
+    prep.append(notesTitle, notes);
   }
 }
