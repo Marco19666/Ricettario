@@ -1,4 +1,4 @@
-const CACHE = 'ricettario-v5';
+const CACHE = 'ricettario-v6';
 const ASSETS = [
   './',
   './index.html',
@@ -6,7 +6,6 @@ const ASSETS = [
   './manifest.webmanifest',
   './js/app.js',
   './js/api.js',
-  './js/local-recipes.js',
   './js/local-recipes.js',
   './js/db.js',
   './js/ui.js',
@@ -32,20 +31,6 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  if (url.hostname.endsWith('themealdb.com')) {
-    e.respondWith(
-      fetch(req)
-        .then(res => {
-          if (res.ok) {
-            const clone = res.clone();
-            caches.open(CACHE).then(c => c.put(req, clone));
-          }
-          return res;
-        })
-        .catch(() => caches.match(req))
-    );
-    return;
-  }
 
   if (url.origin === location.origin) {
     e.respondWith(
