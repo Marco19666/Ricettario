@@ -1,6 +1,7 @@
 import { searchMeals, getMealById } from './api.js';
 import { LOCAL_RECIPES } from './local-recipes.js';
 import * as db from './db.js';
+import { listCloudRecipes, saveCloudRecipe, deleteCloudRecipe } from './cloud.js';
 import { renderRecipeList, renderDetail } from './ui.js';
 
 const els = {
@@ -125,6 +126,7 @@ els.btnAccept.addEventListener('click', async () => {
   if (state.currentIsSaved) {
     if (!confirm('Rimuovere la ricetta dai salvati?')) return;
     els.btnAccept.disabled = true;
+    try { await deleteCloudRecipe(state.currentRecipe.id); } catch (cloudError) { console.info('Copia cloud non eliminata:', cloudError.message); }
     try { await db.deleteRecipe(state.currentRecipe.id); state.currentIsSaved = false; updateAcceptButton(); }
     catch (err) { alert('Errore: ' + err.message); els.btnAccept.disabled = false; }
     return;
@@ -132,6 +134,8 @@ els.btnAccept.addEventListener('click', async () => {
   els.btnAccept.disabled = true; els.btnAccept.textContent = 'Salvataggio...';
   try {
     const saved = await db.saveRecipe(state.currentRecipe);
+    try { await saveCloudRecipe(saved, await db.getPhotoBlob(saved.id)); }
+    catch (cloudError) { alert('La ricetta è stata salvata sul tablet, ma non ancora online. ' + cloudError.message); }
     state.currentRecipe = saved; state.currentIsSaved = true; updateAcceptButton();
     const blob = await db.getPhotoBlob(saved.id);
     if (blob) els.detailPhoto.src = newBlobUrl(blob);
@@ -139,6 +143,13 @@ els.btnAccept.addEventListener('click', async () => {
 });
 async function renderSavedView() {
   els.savedGrid.innerHTML = '<p class="empty">Carico...</p>';
+  try {
+    const remoteRecipes = await listCloudRecipes();
+    for (const recipe of remoteRecipes) {
+      const local = await db.getRecipe(recipe.id);
+      if (!local) await db.saveRecipe(recipe);
+    }
+  } catch (cloudError) { console.info('Archivio cloud non disponibile:', cloudError.message); }
   const recipes = await db.listRecipes();
   if (!recipes.length) {
     els.savedGrid.innerHTML = '<p class="empty">Non hai ancora ricette salvate.<br><a href="#">Torna alla ricerca</a> oppure aggiungine una.</p>';
@@ -187,6 +198,8 @@ els.recipeForm.addEventListener('submit', async event => {
   submit.disabled = true; submit.textContent = 'Salvataggio...';
   try {
     await db.saveRecipe(recipe);
+    try { await saveCloudRecipe(recipe, selectedPhoto); }
+    catch (cloudError) { alert('Ricetta salvata sul tablet, ma non ancora online. ' + cloudError.message); }
     els.recipeForm.reset(); selectedPhoto = null;
     els.recipePreview.removeAttribute('src'); els.recipePreview.hidden = true;
     els.photoPrompt.hidden = false; els.formStatus.textContent = 'Ricetta aggiunta al tuo ricettario!';
