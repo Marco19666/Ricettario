@@ -1,7 +1,8 @@
 const DB_NAME = 'ricettario-db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const RECIPES_STORE = 'recipes';
 const PHOTOS_STORE = 'photos';
+const DELETED_STORE = 'deleted';
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -10,6 +11,7 @@ function openDB() {
       const db = request.result;
       if (!db.objectStoreNames.contains(RECIPES_STORE)) db.createObjectStore(RECIPES_STORE, { keyPath: 'id' });
       if (!db.objectStoreNames.contains(PHOTOS_STORE)) db.createObjectStore(PHOTOS_STORE, { keyPath: 'id' });
+      if (!db.objectStoreNames.contains(DELETED_STORE)) db.createObjectStore(DELETED_STORE, { keyPath: 'id' });
     };
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error || new Error('Impossibile aprire il database'));
@@ -63,4 +65,14 @@ export async function deleteRecipe(id) {
     tx.onerror = () => { const error = tx.error || new Error('Impossibile eliminare la ricetta'); db.close(); reject(error); };
     tx.onabort = () => { const error = tx.error || new Error('Eliminazione annullata'); db.close(); reject(error); };
   });
+}
+export async function markRecipeDeleted(id) {
+  return withStore(DELETED_STORE, 'readwrite', store => store.put({ id: String(id), deletedAt: Date.now() }));
+}
+export async function clearRecipeDeleted(id) {
+  return withStore(DELETED_STORE, 'readwrite', store => store.delete(String(id)));
+}
+export async function listDeletedRecipeIds() {
+  const records = await withStore(DELETED_STORE, 'readonly', store => store.getAll());
+  return records.map(record => record.id);
 }
