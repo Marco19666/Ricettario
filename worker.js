@@ -241,7 +241,7 @@ async function handlePersonalApi(request, url, env) {
     if (request.method === 'PUT') {
       if (!row) return privateJson({error:'Salva prima la ricetta'},404);
       const type = request.headers.get('content-type') || '';
-      if (!type.startsWith('image/')) return privateJson({error:'Il file deve essere una fotografia'},415);
+      if (!['image/jpeg','image/png','image/webp','image/gif','image/avif'].includes(type.split(';')[0].trim().toLowerCase())) return privateJson({error:'Usa una foto JPG, PNG, WebP, GIF o AVIF'},415);
       const blob = await request.arrayBuffer();
       if (!blob.byteLength || blob.byteLength > 8*1024*1024) return privateJson({error:'La foto deve essere inferiore a 8 MB'},413);
       const key = await photoObjectKey(userId,id);
