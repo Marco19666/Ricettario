@@ -15,4 +15,4 @@ Il Worker usa Cloudflare Access per identificare l'utente, D1 per i dati e R2 pe
 Le API personali verificano la firma del token JWT di Cloudflare Access. Ogni query D1 è filtrata per l'identificativo dell'utente autenticato; le fotografie sono archiviate con chiavi separate per utente. Non rendere pubblici il database D1 o il bucket R2.
 
 ## Prima sincronizzazione
-Quando si apre **Le mie ricette**, l'app importa sul tablet le ricette già presenti nel cloud. Le nuove ricette e le foto vengono inviate al cloud al momento del salvataggio. Le ricette che erano già soltanto sul tablet non vengono caricate tutte automaticamente: per ora occorre aprirle e salvarle di nuovo una per volta.
+Quando si apre **Le mie ricette**, l'app importa sul tablet le ricette già presenti nel cloud. Le nuove ricette e le foto vengono inviate al cloud al momento del salvataggio. Quando si apre **Le mie ricette** con il cloud configurato, le ricette già presenti sul tablet vengono caricate automaticamente insieme alle fotografie disponibili.
