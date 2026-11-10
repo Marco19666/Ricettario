@@ -15,7 +15,9 @@ export function renderRecipeList(container, recipes, onSelect) {
     const img = document.createElement('img');
     img.loading = 'lazy';
     img.alt = '';
-    img.src = r._src || r.photoUrl;
+    const imageUrl = r._src || r.photoUrl;
+    if (imageUrl) img.src = imageUrl;
+    else imgWrap.hidden = true;
     imgWrap.appendChild(img);
 
     const body = document.createElement('div');
@@ -40,8 +42,15 @@ export function renderDetail(recipe, photoSrc) {
     [recipe.category, recipe.area].filter(Boolean).join(' · ');
 
   const img = document.getElementById('r-photo');
-  img.src = photoSrc;
-  img.alt = recipe.title;
+  if (photoSrc) {
+    img.src = photoSrc;
+    img.alt = recipe.title;
+    img.hidden = false;
+  } else {
+    img.removeAttribute('src');
+    img.alt = '';
+    img.hidden = true;
+  }
 
   const ul = document.getElementById('r-ingredients');
   ul.innerHTML = '';
