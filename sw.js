@@ -36,7 +36,7 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  const isAppCode = /\\.(?:html|js|css)$/.test(url.pathname);
+  const isAppCode = /\.(?:html|js|css)$/.test(url.pathname);
   const isNavigation = request.mode === 'navigate';
 
   if (isNavigation || isAppCode) {
