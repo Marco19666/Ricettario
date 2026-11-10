@@ -13,8 +13,6 @@ const els = {
   btnHome: document.getElementById('btn-home'),
   searchForm: document.getElementById('search-form'),
   searchInput: document.getElementById('search-input'),
-  linkForm: document.getElementById('link-form'),
-  linkStatus: document.getElementById('link-status'),
   resultsGrid: document.getElementById('results-grid'),
   savedGrid: document.getElementById('saved-grid'),
   btnAccept: document.getElementById('btn-accept'),
@@ -58,7 +56,7 @@ async function route() {
     if (hash.startsWith('recipe/')) {
       showView('detail');
       setTitle('Ricetta');
-      await renderDetailView(hash.slice(7));
+      await renderDetailView(decodeURIComponent(hash.slice(7)));
       return;
     }
     if (hash.startsWith('results/')) {
@@ -190,76 +188,11 @@ els.btnAccept.addEventListener('click', async () => {
   }
 });
 
-// ---------- Salva collegamento Moldrek ----------
-els.linkForm.addEventListener('submit', async event => {
-  event.preventDefault();
-  const title = document.getElementById('link-title').value.trim();
-  const rawUrl = document.getElementById('link-url').value.trim();
-  const photoRaw = document.getElementById('link-photo').value.trim();
-  const ingredientLines = document.getElementById('link-ingredients').value
-    .split(/\r?\n/)
-    .map(line => line.trim())
-    .filter(Boolean);
-  const preparation = document.getElementById('link-preparation').value.trim();
-  const notes = document.getElementById('link-notes').value.trim();
-
-  let url;
-  try {
-    url = new URL(rawUrl);
-  } catch {
-    els.linkStatus.textContent = 'Inserisci un indirizzo web valido.';
-    return;
-  }
-
-  if (url.protocol !== 'https:' || !/(^|\.)moldrek\.com$/i.test(url.hostname)) {
-    els.linkStatus.textContent = 'Inserisci un collegamento https://www.moldrek.com/ valido.';
-    return;
-  }
-
-  let photoUrl = '';
-  if (photoRaw) {
-    try {
-      const photo = new URL(photoRaw);
-      if (photo.protocol !== 'https:') throw new Error('URL non sicuro');
-      photoUrl = photo.href;
-    } catch {
-      els.linkStatus.textContent = 'L’indirizzo della foto deve essere un URL https valido.';
-      return;
-    }
-  }
-
-  const recipe = {
-    id: `link-${crypto.randomUUID()}`,
-    title,
-    category: 'Ricetta Moldrek',
-    area: 'Raccolta personale',
-    sourceUrl: url.href,
-    photoUrl,
-    ingredients: ingredientLines.map(line => ({ name: line, measure: '' })),
-    instructions: preparation,
-    personalNotes: notes,
-  };
-
-  const submit = els.linkForm.querySelector('button[type="submit"]');
-  submit.disabled = true;
-  els.linkStatus.textContent = 'Salvo...';
-  try {
-    await db.saveRecipe(recipe);
-    els.linkForm.reset();
-    els.linkStatus.textContent = 'Collegamento salvato nel tuo Ricettario.';
-    location.hash = `recipe/${recipe.id}`;
-  } catch (err) {
-    els.linkStatus.textContent = 'Non sono riuscito a salvare: ' + err.message;
-  } finally {
-    submit.disabled = false;
-  }
-});
-
 // ---------- Salvate ----------
 async function renderSavedView() {
   els.savedGrid.innerHTML = '<p class="empty">Carico...</p>';
   const recipes = (await db.listRecipes()).filter(r =>
-    String(r.id).startsWith('local-') || String(r.id).startsWith('link-')
+    true
   );
   if (!recipes.length) {
     els.savedGrid.innerHTML =
