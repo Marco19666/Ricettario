@@ -204,10 +204,8 @@ els.searchForm.addEventListener('submit', e => {
   if (q) location.hash = 'results/' + encodeURIComponent(q);
 });
 document.getElementById('btn-search-moldrek').addEventListener('click', () => {
-  const q = els.searchInput.value.trim();
-  if (!q) { els.searchInput.focus(); return; }
-  const url = 'https://www.google.com/search?q=' + encodeURIComponent('site:moldrek.com ' + q);
-  window.open(url, '_blank', 'noopener,noreferrer');
+  // Navigazione nella stessa scheda: evita il blocco dei popup nei browser/PWA.
+  window.location.href = 'https://www.moldrek.com/ricerche.htm';
 });
 els.btnHome.addEventListener('click', () => { location.hash = ''; });
 document.getElementById('btn-cancel-add').addEventListener('click', () => { location.hash = ''; });
