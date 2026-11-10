@@ -279,3 +279,15 @@ body {
 
 .link-form textarea { resize: vertical; line-height: 1.45; }
 .tile-preparation h4 { margin: 1rem 0 .35rem; color: var(--brand-dark); font-size: .95rem; }
+
+.photo-placeholder {
+  min-height: 150px;
+  margin: 0;
+  padding: 2rem 1rem;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  text-align: center;
+  background: #eee;
+}
+.tile-photo img[hidden] { display: none; }
