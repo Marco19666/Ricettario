@@ -58,6 +58,9 @@ export function renderDetail(recipe, photoSrc) {
   const img = document.getElementById('r-photo');
   const photoTile = img.closest('.tile-photo');
   const photoPlaceholder = document.getElementById('r-photo-placeholder');
+  const photoCredit = document.getElementById('r-photo-credit');
+  photoCredit.hidden = !recipe.photoCredit;
+  photoCredit.textContent = recipe.photoCredit || '';
   photoTile.hidden = false;
   if (photoSrc) {
     img.src = photoSrc;
