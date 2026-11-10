@@ -5,7 +5,7 @@ import * as db from './db.js';
 function normalize(value) {
   return String(value || '')
     .normalize('NFD')
-    .replace(/[\\u0300-\\u036f]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLocaleLowerCase('it');
 }
 
@@ -20,7 +20,7 @@ function searchableText(recipe) {
 }
 
 export async function searchMeals(query) {
-  const terms = normalize(query).trim().split(/\\s+/).filter(Boolean);
+  const terms = normalize(query).trim().split(/\s+/).filter(Boolean);
   if (!terms.length) return [];
 
   // Cerca sia nell'archivio iniziale sia nelle ricette personali salvate.
