@@ -291,3 +291,30 @@ body {
   background: #eee;
 }
 .tile-photo img[hidden] { display: none; }
+
+/* Home, ricetta del giorno e form personale */
+.home-actions{display:flex;gap:.65rem;margin-bottom:1rem}
+.home-action{flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem 1rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--text);font-weight:650;text-decoration:none}
+.home-action.primary-action{background:var(--brand);border-color:var(--brand);color:#fff}
+.daily-section{margin:2rem auto 1rem;max-width:850px}
+.daily-section h2,.view-heading h2{font-size:1.5rem;margin:.2rem 0 1rem}
+.section-kicker{font-size:.72rem;letter-spacing:.12em;font-weight:750;color:var(--brand);margin:0 0 .4rem}
+.daily-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);width:100%;padding:0;overflow:hidden;text-align:left;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);color:var(--text);box-shadow:var(--shadow)}
+.daily-card img{width:100%;height:210px;object-fit:cover}
+.daily-copy{display:flex;flex-direction:column;justify-content:center;gap:.8rem;padding:1.2rem}
+.daily-copy strong{font:600 1.3rem/1.25 Georgia,serif}
+.daily-copy span{font-size:.9rem;color:var(--brand-dark)}
+.view-heading{margin:.5rem 0 1.2rem}
+.view-heading .meta{color:var(--muted)}
+.back-link{border:0;background:none;color:var(--brand-dark);font:inherit;font-weight:650;padding:.5rem 0 1rem}
+.recipe-form{display:grid;gap:1rem;max-width:720px}
+.recipe-form label{display:grid;gap:.45rem;font-weight:650;font-size:.95rem}
+.recipe-form input:not([type=file]),.recipe-form textarea{width:100%;padding:.85rem 1rem;border:1px solid var(--border);border-radius:10px;background:var(--card);font:inherit;color:var(--text)}
+.recipe-form textarea{resize:vertical;line-height:1.5}
+.photo-upload{position:relative;min-height:150px;border:2px dashed #c9c2b8;border-radius:12px;background:var(--card);display:grid;place-items:center;overflow:hidden;color:var(--muted);text-align:center;padding:1rem}
+.photo-upload input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.photo-upload img{max-height:260px;max-width:100%;object-fit:contain}
+.form-submit{min-height:48px;border:0;border-radius:var(--radius);background:var(--brand);color:white;font:inherit;font-weight:700;padding:.8rem 1rem}
+.form-submit:disabled{opacity:.65}
+.form-status{min-height:1.3em;color:var(--muted);font-size:.9rem}
+@media(max-width:600px){.home-actions{flex-direction:column}.daily-card{grid-template-columns:1fr}.daily-card img{height:190px}.daily-copy{padding:1rem}.daily-copy strong{font-size:1.15rem}}
