@@ -1,4 +1,4 @@
-const CACHE = 'ricettario-v4';
+const CACHE = 'ricettario-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const ASSETS = [
   './manifest.webmanifest',
   './js/app.js',
   './js/api.js',
+  './js/local-recipes.js',
   './js/local-recipes.js',
   './js/db.js',
   './js/ui.js',
