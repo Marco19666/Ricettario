@@ -24,7 +24,22 @@
         <input type="search" id="search-input" placeholder="Cerca una ricetta (es. carbonara)" required>
         <button type="submit">Cerca</button>
       </form>
-      <p class="hint">Suggerimenti: prova "carbonara", "pesto", "tiramisù", "zucca".</p>
+      <p class="hint">Cerca nell'archivio del Ricettario oppure salva un collegamento da Misya.</p>
+
+      <section class="save-link-panel" aria-labelledby="save-link-title">
+        <h2 id="save-link-title">Salva una ricetta da Misya</h2>
+        <p>Apri <a href="https://www.misya.info/" target="_blank" rel="noopener noreferrer">Misya</a>, scegli una ricetta e incolla qui il suo indirizzo. Il Ricettario conserverà il collegamento e le tue note personali.</p>
+        <form id="link-form" class="link-form">
+          <label for="link-title">Nome della ricetta</label>
+          <input id="link-title" name="title" type="text" placeholder="Es. Lasagne al forno" maxlength="120" required>
+          <label for="link-url">Indirizzo della ricetta su Misya</label>
+          <input id="link-url" name="url" type="url" inputmode="url" placeholder="https://www.misya.info/..." required>
+          <label for="link-notes">Note personali (facoltative)</label>
+          <textarea id="link-notes" name="notes" rows="3" placeholder="Le mie modifiche, dosi, impressioni..."></textarea>
+          <button type="submit">Salva nel mio Ricettario</button>
+          <p id="link-status" class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
     </section>
 
     <section id="view-results" class="view" hidden>
@@ -36,16 +51,17 @@
         <article class="tile tile-title">
           <h2 id="r-title"></h2>
           <p id="r-meta" class="meta"></p>
+          <p id="r-source" class="source-link" hidden><a id="r-source-link" href="#" target="_blank" rel="noopener noreferrer">Apri la ricetta originale su Misya ↗</a></p>
         </article>
         <article class="tile tile-photo">
           <img id="r-photo" alt="">
         </article>
         <article class="tile tile-ingredients">
-          <h3>Ingredienti</h3>
+          <h3 id="r-ingredients-title">Ingredienti</h3>
           <ul id="r-ingredients"></ul>
         </article>
         <article class="tile tile-preparation">
-          <h3>Preparazione</h3>
+          <h3 id="r-preparation-title">Preparazione</h3>
           <div id="r-instructions"></div>
         </article>
       </div>
