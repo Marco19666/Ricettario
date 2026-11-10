@@ -13,6 +13,8 @@ const els = {
   btnHome: document.getElementById('btn-home'),
   searchForm: document.getElementById('search-form'),
   searchInput: document.getElementById('search-input'),
+  linkForm: document.getElementById('link-form'),
+  linkStatus: document.getElementById('link-status'),
   resultsGrid: document.getElementById('results-grid'),
   savedGrid: document.getElementById('saved-grid'),
   btnAccept: document.getElementById('btn-accept'),
@@ -105,12 +107,12 @@ async function renderDetailView(id) {
   const saved = await db.getRecipe(id);
   isSaved = Boolean(saved);
 
-  // Le vecchie versioni potevano aver salvato solo titolo e foto:
-  // recupera sempre il dettaglio completo prima di mostrare la scheda.
-  const needsDetails = !saved ||
+  // I collegamenti personali sono schede complete: non richiedono una ricerca esterna.
+  const needsDetails = !saved || (!saved.sourceUrl && (
     !Array.isArray(saved.ingredients) ||
     !saved.ingredients.length ||
-    !saved.instructions;
+    !saved.instructions
+  ));
 
   if (needsDetails) {
     const apiRecipe = await getMealById(id);
@@ -127,9 +129,7 @@ async function renderDetailView(id) {
 
   const blob = saved ? await db.getPhotoBlob(id) : null;
   photoSrc = blob ? newBlobUrl(blob) : recipe.photoUrl;
-  if (!recipe.title || !recipe.ingredients || !recipe.instructions) {
-    throw new Error('La scheda ricevuta è incompleta. Riprova tra poco.');
-  }
+  if (!recipe.title) throw new Error('La scheda ricevuta è incompleta. Riprova tra poco.');
 
   state.currentRecipe = recipe;
   state.currentIsSaved = isSaved;
@@ -162,7 +162,6 @@ els.btnAccept.addEventListener('click', async () => {
       await db.deleteRecipe(state.currentRecipe.id);
       state.currentIsSaved = false;
       updateAcceptButton();
-      // l'immagine blob rimane visibile in memoria fino al prossimo route
     } catch (err) {
       alert('Errore: ' + err.message);
       els.btnAccept.disabled = false;
@@ -191,10 +190,57 @@ els.btnAccept.addEventListener('click', async () => {
   }
 });
 
+// ---------- Salva link Misya ----------
+els.linkForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  const title = document.getElementById('link-title').value.trim();
+  const rawUrl = document.getElementById('link-url').value.trim();
+  const notes = document.getElementById('link-notes').value.trim();
+
+  let url;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    els.linkStatus.textContent = 'Inserisci un indirizzo web valido.';
+    return;
+  }
+
+  if (url.protocol !== 'https:' || !/(^|\.)misya\.info$/i.test(url.hostname)) {
+    els.linkStatus.textContent = 'Per questa raccolta inserisci un collegamento https://www.misya.info/.';
+    return;
+  }
+
+  const recipe = {
+    id: `link-${crypto.randomUUID()}`,
+    title,
+    category: 'Link Misya',
+    area: 'Raccolta personale',
+    sourceUrl: url.href,
+    ingredients: [],
+    instructions: notes,
+  };
+
+  const submit = els.linkForm.querySelector('button[type="submit"]');
+  submit.disabled = true;
+  els.linkStatus.textContent = 'Salvo...';
+  try {
+    await db.saveRecipe(recipe);
+    els.linkForm.reset();
+    els.linkStatus.textContent = 'Collegamento salvato nel tuo Ricettario.';
+    location.hash = `recipe/${recipe.id}`;
+  } catch (err) {
+    els.linkStatus.textContent = 'Non sono riuscito a salvare: ' + err.message;
+  } finally {
+    submit.disabled = false;
+  }
+});
+
 // ---------- Salvate ----------
 async function renderSavedView() {
   els.savedGrid.innerHTML = '<p class="empty">Carico...</p>';
-  const recipes = (await db.listRecipes()).filter(r => String(r.id).startsWith('local-'));
+  const recipes = (await db.listRecipes()).filter(r =>
+    String(r.id).startsWith('local-') || String(r.id).startsWith('link-')
+  );
   if (!recipes.length) {
     els.savedGrid.innerHTML =
       '<p class="empty">Non hai ancora salvato nessuna ricetta.<br><a href="#">Cerca qualcosa da salvare</a></p>';
