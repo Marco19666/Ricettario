@@ -41,6 +41,16 @@ export function renderDetail(recipe, photoSrc) {
   document.getElementById('r-meta').textContent =
     [recipe.category, recipe.area].filter(Boolean).join(' · ');
 
+  const sourceWrap = document.getElementById('r-source');
+  const sourceLink = document.getElementById('r-source-link');
+  if (recipe.sourceUrl) {
+    sourceLink.href = recipe.sourceUrl;
+    sourceWrap.hidden = false;
+  } else {
+    sourceWrap.hidden = true;
+    sourceLink.removeAttribute('href');
+  }
+
   const img = document.getElementById('r-photo');
   const photoTile = img.closest('.tile-photo');
   if (photoSrc) {
@@ -56,19 +66,32 @@ export function renderDetail(recipe, photoSrc) {
     img.hidden = true;
   }
 
+  const ingredients = recipe.ingredients || [];
+  const ingredientsTile = document.querySelector('.tile-ingredients');
+  const ingredientsTitle = document.getElementById('r-ingredients-title');
+  ingredientsTile.hidden = ingredients.length === 0;
+  ingredientsTitle.textContent = recipe.sourceUrl ? 'Ingredienti' : 'Ingredienti';
+
   const ul = document.getElementById('r-ingredients');
   ul.innerHTML = '';
-  for (const { name, measure } of recipe.ingredients || []) {
+  for (const { name, measure } of ingredients) {
     const li = document.createElement('li');
     li.textContent = `${measure} ${name}`.trim();
     ul.appendChild(li);
   }
 
+  const prepTitle = document.getElementById('r-preparation-title');
+  prepTitle.textContent = recipe.sourceUrl ? 'Note personali' : 'Preparazione';
   const prep = document.getElementById('r-instructions');
   prep.innerHTML = '';
   for (const p of (recipe.instructions || '').split(/\r?\n+/).filter(Boolean)) {
     const para = document.createElement('p');
     para.textContent = p;
+    prep.appendChild(para);
+  }
+  if (recipe.sourceUrl && !recipe.instructions) {
+    const para = document.createElement('p');
+    para.textContent = 'Nessuna nota aggiunta. Apri il collegamento originale per consultare ingredienti e preparazione.';
     prep.appendChild(para);
   }
 }
