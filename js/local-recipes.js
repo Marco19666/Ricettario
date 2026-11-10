@@ -6,7 +6,7 @@ export const LOCAL_RECIPES = [
     title: 'Spaghetti alla carbonara',
     category: 'Primi piatti',
     area: 'Lazio',
-    photoUrl: '',
+    photoUrl: 'https://images.unsplash.com/photo-1633337474564-1d9478ca4e2e?auto=format&fit=crop&fm=jpg&ixid=NHwxMjA3fDA%3D&ixlib=rb-4.1.0&q=60&w=1200',
     ingredients: [
       { name: 'Spaghetti', measure: '320 g' },
       { name: 'Guanciale', measure: '150 g' },
@@ -22,7 +22,7 @@ export const LOCAL_RECIPES = [
     title: 'Bucatini all’amatriciana',
     category: 'Primi piatti',
     area: 'Lazio',
-    photoUrl: '',
+    photoUrl: 'https://images.pexels.com/photos/11654235/pexels-photo-11654235.jpeg?auto=compress&dpr=1&h=750&w=1260',
     ingredients: [
       { name: 'Bucatini', measure: '320 g' },
       { name: 'Guanciale', measure: '150 g' },
@@ -38,7 +38,7 @@ export const LOCAL_RECIPES = [
     title: 'Pesto alla genovese',
     category: 'Salse e condimenti',
     area: 'Liguria',
-    photoUrl: '',
+    photoUrl: 'https://images.pexels.com/photos/34326274/pexels-photo-34326274/free-photo-of-delicious-creamy-pesto-pasta-with-basil-garnish.jpeg?auto=compress&dpr=1&h=750&w=1260',
     ingredients: [
       { name: 'Basilico fresco', measure: '50 g' },
       { name: 'Olio extravergine d’oliva', measure: '100 ml' },
@@ -55,7 +55,7 @@ export const LOCAL_RECIPES = [
     title: 'Risotto alla zucca',
     category: 'Primi piatti',
     area: 'Lombardia',
-    photoUrl: '',
+    photoUrl: 'https://images.pexels.com/photos/33988119/pexels-photo-33988119/free-photo-of-delicious-pumpkin-risotto-on-elegant-plate.jpeg?auto=compress&dpr=1&h=750&w=1260',
     ingredients: [
       { name: 'Riso Carnaroli', measure: '320 g' },
       { name: 'Zucca pulita', measure: '400 g' },
@@ -73,7 +73,7 @@ export const LOCAL_RECIPES = [
     title: 'Insalata caprese',
     category: 'Antipasti',
     area: 'Campania',
-    photoUrl: '',
+    photoUrl: 'https://images.pexels.com/photos/32570608/pexels-photo-32570608/free-photo-of-caprese-salad-with-fresh-mozzarella-and-basil.jpeg?auto=compress&dpr=1&h=750&w=1260',
     ingredients: [
       { name: 'Pomodori maturi', measure: '3' },
       { name: 'Mozzarella fiordilatte', measure: '250 g' },
@@ -89,7 +89,7 @@ export const LOCAL_RECIPES = [
     title: 'Tiramisù classico',
     category: 'Dolci',
     area: 'Veneto',
-    photoUrl: '',
+    photoUrl: 'https://images.unsplash.com/photo-1766232333746-b0a2697d6d0d?auto=format&fit=crop&fm=jpg&ixid=NHwxMjA3fDA%3D&ixlib=rb-4.1.0&q=60&w=1200',
     ingredients: [
       { name: 'Savoiardi', measure: '250 g' },
       { name: 'Mascarpone', measure: '500 g' },
@@ -105,7 +105,7 @@ export const LOCAL_RECIPES = [
     title: 'Pasta al pomodoro e basilico',
     category: 'Primi piatti',
     area: 'Cucina italiana',
-    photoUrl: '',
+    photoUrl: 'https://images.pexels.com/photos/29039086/pexels-photo-29039086/free-photo-of-delicious-rigatoni-pasta-with-tomato-sauce-and-basil.jpeg?auto=compress&dpr=1&h=750&w=1260',
     ingredients: [
       { name: 'Pasta corta o spaghetti', measure: '320 g' },
       { name: 'Pomodori pelati', measure: '400 g' },
@@ -121,7 +121,7 @@ export const LOCAL_RECIPES = [
     title: 'Patate al forno croccanti',
     category: 'Contorni',
     area: 'Cucina italiana',
-    photoUrl: '',
+    photoUrl: 'https://images.pexels.com/photos/162763/delicious-garnish-potatoes-fried-162763.jpeg?auto=compress&dpr=1&h=750&w=1260',
     ingredients: [
       { name: 'Patate', measure: '800 g' },
       { name: 'Rosmarino', measure: '2 rametti' },
