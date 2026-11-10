@@ -15,6 +15,7 @@ const els = {
   btnHome: document.getElementById('btn-home'),
   searchForm: document.getElementById('search-form'),
   searchInput: document.getElementById('search-input'),
+  searchMoldrek: document.getElementById('btn-search-moldrek'),
   resultsGrid: document.getElementById('results-grid'),
   savedGrid: document.getElementById('saved-grid'),
   btnAccept: document.getElementById('btn-accept'),
@@ -199,9 +200,26 @@ els.recipeForm.addEventListener('submit', async event => {
 els.dailyCard.addEventListener('click', () => {
   if (state.dailyRecipe) location.hash = 'recipe/' + encodeURIComponent(state.dailyRecipe.id);
 });
+// Ricerca locale: archivio integrato + ricette personali salvate sul dispositivo.
 els.searchForm.addEventListener('submit', e => {
-  e.preventDefault(); const q = els.searchInput.value.trim();
+  e.preventDefault();
+  const q = els.searchInput.value.trim();
   if (q) location.hash = 'results/' + encodeURIComponent(q);
+});
+
+// Ricerca Moldrek: apre i risultati del dominio Moldrek, senza servizi intermedi.
+els.searchMoldrek.addEventListener('click', () => {
+  const q = els.searchInput.value.trim();
+  if (!q) {
+    els.searchInput.focus();
+    els.searchInput.setCustomValidity('Scrivi prima cosa vuoi cercare.');
+    els.searchInput.reportValidity();
+    els.searchInput.setCustomValidity('');
+    return;
+  }
+  const url = 'https://www.google.com/search?q=' +
+    encodeURIComponent('site:moldrek.com ' + q);
+  window.open(url, '_blank', 'noopener,noreferrer');
 });
 els.btnHome.addEventListener('click', () => { location.hash = ''; });
 document.getElementById('btn-cancel-add').addEventListener('click', () => { location.hash = ''; });
