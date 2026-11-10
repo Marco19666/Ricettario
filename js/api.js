@@ -1,33 +1,52 @@
-// API del Ricettario: ricerca e lettura automatica delle ricette Moldrek.
+// Ricerca delle ricette disponibili sul dispositivo.
 import { LOCAL_RECIPES } from './local-recipes.js';
+import * as db from './db.js';
+
+function normalize(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\\u0300-\\u036f]/g, '')
+    .toLocaleLowerCase('it');
+}
+
+function searchableText(recipe) {
+  return [
+    recipe.title,
+    recipe.category,
+    recipe.area,
+    ...(recipe.ingredients || []).map(item => item.name),
+    recipe.instructions
+  ].join(' ');
+}
 
 export async function searchMeals(query) {
-  const q = String(query || '').trim();
-  if (!q) return [];
-  const response = await fetch(`/api/recipes/search?q=${encodeURIComponent(q)}`);
-  if (!response.ok) throw new Error('Non riesco a consultare Moldrek in questo momento');
-  const remote = await response.json();
+  const terms = normalize(query).trim().split(/\\s+/).filter(Boolean);
+  if (!terms.length) return [];
 
-  // Mantiene disponibili anche le ricette italiane già integrate nell'app.
-  const local = LOCAL_RECIPES.filter(recipe => {
-    const searchable = [recipe.title, recipe.category, recipe.area,
-      ...(recipe.ingredients || []).map(item => item.name), recipe.instructions]
-      .join(' ').toLocaleLowerCase('it');
-    return searchable.includes(q.toLocaleLowerCase('it'));
+  // Cerca sia nell'archivio iniziale sia nelle ricette personali salvate.
+  const personal = await db.listRecipes();
+  const allRecipes = [...personal, ...LOCAL_RECIPES];
+  const seen = new Set();
+
+  return allRecipes.filter(recipe => {
+    const id = String(recipe.id);
+    if (seen.has(id)) return false;
+    seen.add(id);
+    const text = normalize(searchableText(recipe));
+    return terms.every(term => text.includes(term));
   }).map(recipe => ({
-    id: String(recipe.id), title: recipe.title,
-    category: recipe.category || '', area: recipe.area || '',
-    photoUrl: recipe.photoUrl || '', source: 'local'
+    id: String(recipe.id),
+    title: recipe.title,
+    category: recipe.category || '',
+    area: recipe.area || '',
+    photoUrl: recipe.photoUrl || '',
+    source: recipe.source || 'local'
   }));
-
-  const seen = new Set(remote.map(item => item.id));
-  return [...remote, ...local.filter(item => !seen.has(item.id))];
 }
 
 export async function getMealById(id) {
   const local = LOCAL_RECIPES.find(item => String(item.id) === String(id));
   if (local) return { ...local, ingredients: (local.ingredients || []).map(item => ({ ...item })) };
-  const response = await fetch(`/api/recipes/detail?url=${encodeURIComponent(id)}`);
-  if (!response.ok) throw new Error('Non riesco a leggere la ricetta selezionata');
-  return response.json();
+  const saved = await db.getRecipe(id);
+  return saved || null;
 }
