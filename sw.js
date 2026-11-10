@@ -1,4 +1,4 @@
-const CACHE = 'ricettario-v3';
+const CACHE = 'ricettario-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const ASSETS = [
   './manifest.webmanifest',
   './js/app.js',
   './js/api.js',
+  './js/local-recipes.js',
   './js/db.js',
   './js/ui.js',
   './icons/icon.svg',
@@ -30,7 +31,6 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  // API TheMealDB: prima la rete, poi la cache
   if (url.hostname.endsWith('themealdb.com')) {
     e.respondWith(
       fetch(req)
@@ -46,7 +46,6 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Asset same-origin: cache-first
   if (url.origin === location.origin) {
     e.respondWith(
       caches.match(req).then(hit => hit || fetch(req).then(res => {
