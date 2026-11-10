@@ -79,7 +79,34 @@ async function searchMoldrek(query) {
     area: 'Ricetta originale', photoUrl: '', sourceUrl: item.url
   }));
 }
-function extractRecipe(html, url) {
+async function findCommonsPhoto(title) {
+  try {
+    const endpoint = new URL('https://commons.wikimedia.org/w/api.php');
+    endpoint.search = new URLSearchParams({
+      action: 'query', generator: 'search',
+      gsrsearch: 'filetype:bitmap ' + title + ' food dish',
+      gsrnamespace: '6', gsrlimit: '5', prop: 'imageinfo',
+      iiprop: 'url|extmetadata', iiurlwidth: '900', format: 'json'
+    });
+    const response = await fetch(endpoint.href, { headers: {
+      'user-agent': 'Ricettario/1.0 (recipe photo lookup)',
+      'accept': 'application/json'
+    }});
+    if (!response.ok) return null;
+    const data = await response.json();
+    const pages = Object.values(data.query?.pages || {});
+    for (const page of pages) {
+      const info = page.imageinfo?.[0];
+      if (!info?.thumburl) continue;
+      const metadata = info.extmetadata || {};
+      const artist = cleanText(metadata.Artist?.value || '').replace(/\s+/g, ' ').trim();
+      const license = cleanText(metadata.LicenseShortName?.value || '').trim();
+      return { url: info.thumburl, credit: [artist, license, 'Wikimedia Commons'].filter(Boolean).join(' · ') };
+    }
+  } catch {}
+  return null;
+}
+async function extractRecipe(html, url) {
   const text = cleanText(html);
   const lower = text.toLocaleLowerCase('it');
   const ingredientAt = lower.indexOf('ingredienti:');
@@ -120,8 +147,13 @@ function extractRecipe(html, url) {
       if (words.some(word => normalize(candidate.pathname).includes(word))) photoUrl = candidate.href;
     } catch {}
   }
+  let photoCredit = '';
+  if (!photoUrl) {
+    const fallback = await findCommonsPhoto(title);
+    if (fallback) { photoUrl = fallback.url; photoCredit = fallback.credit; }
+  }
   return { id: url, title, category: 'Moldrek', area: 'Ricetta originale',
-    sourceUrl: url, photoUrl, ingredients, instructions };
+    sourceUrl: url, photoUrl, photoCredit, ingredients, instructions };
 }
 export default {
   async fetch(request, env) {
@@ -140,7 +172,7 @@ export default {
           !recipeUrl.pathname.startsWith('/ricette_indice/')) {
         return json({ error: 'La pagina non appartiene all’archivio ricette Moldrek' }, 400);
       }
-      try { return json(extractRecipe(await fetchHtml(recipeUrl.href), recipeUrl.href)); }
+      try { return json(await extractRecipe(await fetchHtml(recipeUrl.href), recipeUrl.href)); }
       catch (error) { return json({ error: error.message }, 502); }
     }
     return env.ASSETS.fetch(request);
