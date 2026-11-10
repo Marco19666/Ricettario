@@ -69,8 +69,8 @@ export function renderDetail(recipe, photoSrc) {
   const ingredients = recipe.ingredients || [];
   const ingredientsTile = document.querySelector('.tile-ingredients');
   const ingredientsTitle = document.getElementById('r-ingredients-title');
-  ingredientsTile.hidden = ingredients.length === 0;
-  ingredientsTitle.textContent = recipe.sourceUrl ? 'Ingredienti' : 'Ingredienti';
+  ingredientsTile.hidden = false;
+  ingredientsTitle.textContent = 'Ingredienti';
 
   const ul = document.getElementById('r-ingredients');
   ul.innerHTML = '';
