@@ -1,4 +1,4 @@
-const CACHE = 'ricettario-v9';
+const CACHE = 'ricettario-v10';
 const ASSETS = [
   './',
   './index.html',
