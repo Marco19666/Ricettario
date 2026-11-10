@@ -205,7 +205,7 @@ els.searchForm.addEventListener('submit', e => {
 });
 document.getElementById('btn-search-moldrek').addEventListener('click', () => {
   // Navigazione nella stessa scheda: evita il blocco dei popup nei browser/PWA.
-  window.location.href = 'https://www.moldrek.com/ricerche.htm';
+  window.location.href = 'https://www.moldrek.com/indice_ricette_a.htm';
 });
 els.btnHome.addEventListener('click', () => { location.hash = ''; });
 document.getElementById('btn-cancel-add').addEventListener('click', () => { location.hash = ''; });
