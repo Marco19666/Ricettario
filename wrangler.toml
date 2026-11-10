@@ -7,3 +7,8 @@ directory = "./"
 binding = "ASSETS"
 run_worker_first = ["/api/*"]
 not_found_handling = "single-page-application"
+
+# Configurare i binding nel pannello Cloudflare Worker > Settings > Bindings:
+# D1 database: variabile DB
+# R2 bucket: variabile PHOTOS
+# Variabili Worker: CF_ACCESS_TEAM_DOMAIN e CF_ACCESS_AUD
