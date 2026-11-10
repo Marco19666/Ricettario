@@ -1,5 +1,5 @@
-const CACHE = 'ricettario-v13';
-const ASSETS = ['./','./index.html','./style.css','./manifest.webmanifest','./js/app.js','./js/api.js','./js/local-recipes.js','./js/db.js','./js/ui.js','./icons/icon.svg'];
+const CACHE = 'ricettario-v14';
+const ASSETS = ['./','./index.html','./style.css','./manifest.webmanifest','./js/app.js','./js/api.js','./js/local-recipes.js','./js/db.js','./js/cloud.js','./js/ui.js','./icons/icon.svg'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))); self.skipWaiting(); });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
