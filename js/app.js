@@ -103,17 +103,32 @@ async function renderDetailView(id) {
   let recipe, photoSrc, isSaved;
 
   const saved = await db.getRecipe(id);
-  if (saved) {
-    const blob = await db.getPhotoBlob(id);
-    photoSrc = blob ? newBlobUrl(blob) : saved.photoUrl;
-    recipe = saved;
-    isSaved = true;
-  } else {
+  isSaved = Boolean(saved);
+
+  // Le vecchie versioni potevano aver salvato solo titolo e foto:
+  // recupera sempre il dettaglio completo prima di mostrare la scheda.
+  const needsDetails = !saved ||
+    !Array.isArray(saved.ingredients) ||
+    !saved.ingredients.length ||
+    !saved.instructions;
+
+  if (needsDetails) {
     const apiRecipe = await getMealById(id);
-    if (!apiRecipe) throw new Error('Ricetta non trovata');
-    recipe = apiRecipe;
-    photoSrc = apiRecipe.photoUrl;
-    isSaved = false;
+    if (!apiRecipe) throw new Error('Dettaglio della ricetta non trovato');
+    recipe = saved ? { ...apiRecipe, ...saved,
+      ingredients: apiRecipe.ingredients,
+      instructions: apiRecipe.instructions,
+      title: saved.title || apiRecipe.title,
+      photoUrl: saved.photoUrl || apiRecipe.photoUrl
+    } : apiRecipe;
+  } else {
+    recipe = saved;
+  }
+
+  const blob = saved ? await db.getPhotoBlob(id) : null;
+  photoSrc = blob ? newBlobUrl(blob) : recipe.photoUrl;
+  if (!recipe.title || !recipe.ingredients || !recipe.instructions) {
+    throw new Error('La scheda ricevuta è incompleta. Riprova tra poco.');
   }
 
   state.currentRecipe = recipe;
