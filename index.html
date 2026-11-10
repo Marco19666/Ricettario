@@ -34,6 +34,12 @@
           <input id="link-title" name="title" type="text" placeholder="Es. Lasagne al forno" maxlength="120" required>
           <label for="link-url">Indirizzo della ricetta su Misya</label>
           <input id="link-url" name="url" type="url" inputmode="url" placeholder="https://www.misya.info/..." required>
+          <label for="link-photo">Indirizzo della foto (facoltativo)</label>
+          <input id="link-photo" name="photo" type="url" inputmode="url" placeholder="https://...">
+          <label for="link-ingredients">Ingredienti (uno per riga)</label>
+          <textarea id="link-ingredients" name="ingredients" rows="5" placeholder="200 g di farina&#10;2 uova&#10;100 ml di latte"></textarea>
+          <label for="link-preparation">Preparazione (un passaggio per riga)</label>
+          <textarea id="link-preparation" name="preparation" rows="5" placeholder="1. Prepara gli ingredienti...&#10;2. Mescola e cuoci..."></textarea>
           <label for="link-notes">Note personali (facoltative)</label>
           <textarea id="link-notes" name="notes" rows="3" placeholder="Le mie modifiche, dosi, impressioni..."></textarea>
           <button type="submit">Salva nel mio Ricettario</button>
