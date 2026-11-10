@@ -94,7 +94,7 @@ async function renderResultsView(query) {
     resultsCache.set(query, list);
   }
   renderRecipeList(els.resultsGrid, list, r => {
-    location.hash = `recipe/${r.id}`;
+    location.hash = `recipe/${encodeURIComponent(r.id)}`;
   });
 }
 
