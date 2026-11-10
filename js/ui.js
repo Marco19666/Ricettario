@@ -14,9 +14,9 @@ export function renderRecipeList(container, recipes, onSelect) {
     imgWrap.className = 'card-img';
     const img = document.createElement('img');
     img.loading = 'lazy';
-    img.alt = '';
+    img.alt = r.title || 'Ricetta';
     const imageUrl = r._src || r.photoUrl;
-    if (imageUrl) img.src = imageUrl;
+    if (imageUrl) { img.src = imageUrl; img.addEventListener('error', () => { imgWrap.hidden = true; }); }
     else imgWrap.hidden = true;
     imgWrap.appendChild(img);
 
@@ -42,11 +42,15 @@ export function renderDetail(recipe, photoSrc) {
     [recipe.category, recipe.area].filter(Boolean).join(' · ');
 
   const img = document.getElementById('r-photo');
+  const photoTile = img.closest('.tile-photo');
   if (photoSrc) {
     img.src = photoSrc;
     img.alt = recipe.title;
     img.hidden = false;
+    photoTile.hidden = false;
+    img.onerror = () => { photoTile.hidden = true; };
   } else {
+    photoTile.hidden = true;
     img.removeAttribute('src');
     img.alt = '';
     img.hidden = true;
