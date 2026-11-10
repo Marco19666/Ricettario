@@ -194,7 +194,7 @@ els.btnAccept.addEventListener('click', async () => {
 // ---------- Salvate ----------
 async function renderSavedView() {
   els.savedGrid.innerHTML = '<p class="empty">Carico...</p>';
-  const recipes = await db.listRecipes();
+  const recipes = (await db.listRecipes()).filter(r => String(r.id).startsWith('local-'));
   if (!recipes.length) {
     els.savedGrid.innerHTML =
       '<p class="empty">Non hai ancora salvato nessuna ricetta.<br><a href="#">Cerca qualcosa da salvare</a></p>';
