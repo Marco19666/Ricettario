@@ -203,6 +203,12 @@ els.searchForm.addEventListener('submit', e => {
   e.preventDefault(); const q = els.searchInput.value.trim();
   if (q) location.hash = 'results/' + encodeURIComponent(q);
 });
+document.getElementById('btn-search-moldrek').addEventListener('click', () => {
+  const q = els.searchInput.value.trim();
+  if (!q) { els.searchInput.focus(); return; }
+  const url = 'https://www.google.com/search?q=' + encodeURIComponent('site:moldrek.com ' + q);
+  window.open(url, '_blank', 'noopener,noreferrer');
+});
 els.btnHome.addEventListener('click', () => { location.hash = ''; });
 document.getElementById('btn-cancel-add').addEventListener('click', () => { location.hash = ''; });
 els.btnReject.addEventListener('click', () => { location.hash = ''; });
