@@ -276,3 +276,6 @@ body {
 .link-form button:disabled { opacity: .65; }
 .form-status { min-height: 1.3em; margin: .2rem 0 0; font-size: .9rem; }
 .source-link { margin: .8rem 0 0; }
+
+.link-form textarea { resize: vertical; line-height: 1.45; }
+.tile-preparation h4 { margin: 1rem 0 .35rem; color: var(--brand-dark); font-size: .95rem; }
