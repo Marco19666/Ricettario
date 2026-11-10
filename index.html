@@ -24,16 +24,16 @@
         <input type="search" id="search-input" placeholder="Cerca una ricetta (es. carbonara)" required>
         <button type="submit">Cerca</button>
       </form>
-      <p class="hint">Cerca nell'archivio del Ricettario oppure salva un collegamento da Misya.</p>
+      <p class="hint">Cerca nell'archivio del Ricettario oppure consulta l'indice Moldrek.</p>
 
       <section class="save-link-panel" aria-labelledby="save-link-title">
-        <h2 id="save-link-title">Salva una ricetta da Misya</h2>
-        <p>Apri <a href="https://www.misya.info/" target="_blank" rel="noopener noreferrer">Misya</a>, scegli una ricetta e incolla qui il suo indirizzo. Il Ricettario conserverà il collegamento e le tue note personali.</p>
+        <h2 id="save-link-title">Ricette da Moldrek</h2>
+        <p>Consulta l’<a href="https://www.moldrek.com/indice_ricette_a.htm" target="_blank" rel="noopener noreferrer">indice delle ricette Moldrek</a>, apri una ricetta e incolla qui il suo indirizzo. Completa i campi per creare la scheda nei quattro riquadri. Alcune pagine Moldrek non mostrano una foto del piatto: puoi aggiungere un indirizzo immagine.</p>
         <form id="link-form" class="link-form">
           <label for="link-title">Nome della ricetta</label>
           <input id="link-title" name="title" type="text" placeholder="Es. Lasagne al forno" maxlength="120" required>
-          <label for="link-url">Indirizzo della ricetta su Misya</label>
-          <input id="link-url" name="url" type="url" inputmode="url" placeholder="https://www.misya.info/..." required>
+          <label for="link-url">Indirizzo della ricetta su Moldrek</label>
+          <input id="link-url" name="url" type="url" inputmode="url" placeholder="https://www.moldrek.com/ricette_indice/..." required>
           <label for="link-photo">Indirizzo della foto (facoltativo)</label>
           <input id="link-photo" name="photo" type="url" inputmode="url" placeholder="https://...">
           <label for="link-ingredients">Ingredienti (uno per riga)</label>
@@ -57,7 +57,7 @@
         <article class="tile tile-title">
           <h2 id="r-title"></h2>
           <p id="r-meta" class="meta"></p>
-          <p id="r-source" class="source-link" hidden><a id="r-source-link" href="#" target="_blank" rel="noopener noreferrer">Apri la ricetta originale su Misya ↗</a></p>
+          <p id="r-source" class="source-link" hidden><a id="r-source-link" href="#" target="_blank" rel="noopener noreferrer">Apri la ricetta originale ↗</a></p>
         </article>
         <article class="tile tile-photo">
           <img id="r-photo" alt="" hidden>
