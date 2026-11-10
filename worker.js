@@ -172,7 +172,8 @@ async function accessUser(request, env) {
   if (!team || !audience) throw new Error('Cloudflare Access non è ancora configurato');
   const auth = request.headers.get('authorization') || '';
   const cookie = request.headers.get('cookie') || '';
-  const token = auth.startsWith('Bearer ') ? auth.slice(7) : ((cookie.match(/(?:^|;\s*)CF_Authorization=([^;]+)/) || [])[1] || '');
+  const accessAssertion = request.headers.get('Cf-Access-Jwt-Assertion') || '';
+  const token = accessAssertion || (auth.startsWith('Bearer ') ? auth.slice(7) : ((cookie.match(/(?:^|;\\s*)CF_Authorization=([^;]+)/) || [])[1] || ''));
   if (!token) throw new Error('Accedi con Cloudflare Access per usare il ricettario online');
   const parts = token.split('.');
   if (parts.length !== 3) throw new Error('Sessione Cloudflare Access non valida');
