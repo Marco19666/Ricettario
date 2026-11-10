@@ -190,7 +190,7 @@ els.btnAccept.addEventListener('click', async () => {
   }
 });
 
-// ---------- Salva link Misya ----------
+// ---------- Salva collegamento Moldrek ----------
 els.linkForm.addEventListener('submit', async event => {
   event.preventDefault();
   const title = document.getElementById('link-title').value.trim();
@@ -211,8 +211,8 @@ els.linkForm.addEventListener('submit', async event => {
     return;
   }
 
-  if (url.protocol !== 'https:' || !/(^|\.)misya\.info$/i.test(url.hostname)) {
-    els.linkStatus.textContent = 'Per questa raccolta inserisci un collegamento https://www.misya.info/.';
+  if (url.protocol !== 'https:' || !/(^|\\.)moldrek\\.com$/i.test(url.hostname)) {
+    els.linkStatus.textContent = 'Inserisci un collegamento https://www.moldrek.com/ valido.';
     return;
   }
 
@@ -231,7 +231,7 @@ els.linkForm.addEventListener('submit', async event => {
   const recipe = {
     id: `link-${crypto.randomUUID()}`,
     title,
-    category: 'Link Misya',
+    category: 'Ricetta Moldrek',
     area: 'Raccolta personale',
     sourceUrl: url.href,
     photoUrl,
