@@ -197,7 +197,7 @@ els.linkForm.addEventListener('submit', async event => {
   const rawUrl = document.getElementById('link-url').value.trim();
   const photoRaw = document.getElementById('link-photo').value.trim();
   const ingredientLines = document.getElementById('link-ingredients').value
-    .split(/\\r?\\n/)
+    .split(/\r?\n/)
     .map(line => line.trim())
     .filter(Boolean);
   const preparation = document.getElementById('link-preparation').value.trim();
