@@ -100,6 +100,17 @@ body {
   cursor: pointer;
 }
 .search-bar button:hover { background: var(--brand-dark); }
+.search-bar button.search-online {
+  background: var(--card);
+  color: var(--brand-dark);
+  border: 1px solid var(--brand);
+}
+.search-bar button.search-online:hover { background: #fff1e8; }
+@media (max-width: 600px) {
+  .search-bar { flex-wrap: wrap; }
+  .search-bar input { flex-basis: 100%; }
+  .search-bar button { flex: 1 1 0; padding-left: .65rem; padding-right: .65rem; }
+}
 
 .empty {
   text-align: center;
